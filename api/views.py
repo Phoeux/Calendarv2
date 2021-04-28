@@ -1,10 +1,6 @@
-from datetime import datetime, timedelta
-
-from django.db.models import F, ExpressionWrapper, DateTimeField
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import viewsets, status
+from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
-from rest_framework.response import Response
 
 from api.models import Users, Country, Event, Holiday
 from api.serializers import UserSerializer, CountrySerializer, EventSerializer, HolidaySerializer
@@ -29,26 +25,10 @@ class CountryModelViewset(viewsets.ModelViewSet):
 class EventModelViewset(viewsets.ModelViewSet):
     queryset = Event.objects.all()
     serializer_class = EventSerializer
-
-    # permission_classes = [IsAuthenticated]
-
-    # def create(self, request, *args, **kwargs):
-    #     serializer = self.get_serializer(data=request.data)
-    #     serializer.is_valid(raise_exception=True)
-    #     self.perform_create(serializer)
-    #     # Event.objects.filter(title=request.data['title']).update(event_time=ExpressionWrapper(
-    #     #     F('date') + F('reminder'), output_field=DateTimeField()))
-    #     headers = self.get_success_headers(serializer.data)
-    #
-    #     return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+    permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
         data = super(EventModelViewset, self).perform_create(serializer)
-        # data = serializer.save()
-        # print(data.event_time)
-        # time = datetime.utcnow() + timedelta(minutes=2)
-        # print(time)
-        # event_check.apply_async(args=[data.pk], eta=data.event_time)
         event_check.apply_async(args=[serializer.instance.pk], eta=serializer.instance.event_time)
         return data
 
