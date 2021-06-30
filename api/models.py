@@ -1,7 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-from datetime import timedelta, datetime
-
+from datetime import timedelta
 from django.utils import timezone
 
 
@@ -37,7 +36,7 @@ class Event(models.Model):
     title = models.CharField(max_length=200)
     text = models.TextField()
     date = models.DateTimeField(default=timezone.now)
-    reminder = models.DurationField(choices=REMINDER, default=REMINDER[0], max_length=20)
+    reminder = models.DurationField(choices=REMINDER, default=None, max_length=20)
     creator = models.ForeignKey(Users, on_delete=models.CASCADE, related_name='user_event')
     event_time = models.DateTimeField(default=timezone.now, blank=True)
     sended_notification = models.BooleanField(default=False)

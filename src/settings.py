@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'django_celery_results',
     'djoser',
     'djcelery_email',
+    'graphene_django',
     
     'api',
 ]
@@ -142,6 +143,7 @@ AUTH_USER_MODEL = 'api.Users'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES':(
+        'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.TokenAuthentication',
     ),
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
@@ -182,3 +184,7 @@ EMAIL_HOST_PASSWORD = ''
 EMAIL_PORT = 587
 
 EMAIL_BACKEND = 'djcelery_email.backends.CeleryEmailBackend'
+
+GRAPHENE = {
+    "SCHEMA": "api.schema.schema"
+}
